@@ -1,7 +1,7 @@
 require './lib/enrollment_repo'
 require_relative 'test_helper'
 
-class DistrictRepositoryTest < Minitest::Test
+class EnrollmentRepositoryTest < Minitest::Test
   # class TestEconomicProfile < Minitest::Test
   #   def test_free_or_reduced_lunch_in_year
   #     path       = File.expand_path("../data", __dir__)
