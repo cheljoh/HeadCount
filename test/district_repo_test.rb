@@ -14,6 +14,6 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_a_method
     district = DistrictRepository.new
-    assert district.respond_to?(:district_hash)
+    assert district.respond_to?(:load_data)
   end
 end

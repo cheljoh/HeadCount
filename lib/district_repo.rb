@@ -19,10 +19,6 @@ class DistrictRepository
   #   end
   # end
 
-  def district_hash
-    district = Hash.new
-    district[:enrollment] = gather_enrollment_files
-  end
 
   def load_data(key1, key2) #loads the file you want it to load
     contents = CSV.open "../data/#{item}", headers: true, header_converters: :symbol
@@ -42,5 +38,5 @@ class DistrictRepository
 
 end
 
-repo = DistrictRepository.new
-puts repo.district_hash
+# repo = DistrictRepository.new
+# puts repo.district_hash
