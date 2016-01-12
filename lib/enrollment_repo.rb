@@ -34,39 +34,6 @@ class EnrollmentRepository
       @enrollments[key] = enrollment
     end
 
-    # contents.each do |row|
-    #   district = row[:location]
-    #
-    #   if !@enrollments.has_key?(district)
-    #     enrollment = Enrollment.new(district)
-    #   end
-    #
-    #   year = row[:TimeFrame]
-    #   rate = row[:Data]
-    #
-    #   enrollment.kindergarten_participation[year] = rate
-    # end
-
-    #   current_district = row[:location]
-    #
-    #   if previous_district != current_district  # save enrollment from previous district
-    #     #since we've moved on to a new one
-    #     enrollment = Enrollment.new({:name => previous_district,
-    #       :kindergarten_participation => year_hash})
-    #
-    #     @enrollments[previous_district] = enrollment
-    #
-    #     #reset hash
-    #     puts @enrollments[previous_district].name
-    #     year_hash = {}
-    #   end
-    #
-    #   year = row[:TimeFrame]
-    #   rate = row[:Data]
-    #   year_hash[year] = rate
-    #
-    #   previous_district = current_district
-    # end
   end
 
   def find_by_name(name)
@@ -77,8 +44,8 @@ end
 
 # "../data/Kindergartners in full-day program.csv"
 
-e = EnrollmentRepository.new
-e.load_data({:enrollment => {:kindergarten => "../data/kindergartners in full-day program.csv"}})
-enrollment = e.find_by_name("COLORADO")
-rate = enrollment.kindergarten_participation["2012"]
-puts rate
+# e = EnrollmentRepository.new
+# e.load_data({:enrollment => {:kindergarten => "../data/kindergartners in full-day program.csv"}})
+# enrollment = e.find_by_name("adams county 14")
+# rate = enrollment.kindergarten_participation["2009"]
+# puts rate
