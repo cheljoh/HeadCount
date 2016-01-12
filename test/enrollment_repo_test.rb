@@ -12,11 +12,19 @@ class EnrollmentRepositoryTest < Minitest::Test
   #   end
   # end
 
-  def test_a_method
+  def test_kindergarten_rate_adams
     e = EnrollmentRepository.new
     e.load_data({:enrollment => {:kindergarten => "./data/kindergartners in full-day program.csv"}})
     enrollment = e.find_by_name("adams county 14")
     rate = enrollment.kindergarten_participation["2009"]
     assert_equal "1", rate
+  end
+
+  def test_kindergarten_rate_academy_20_2007
+    e = EnrollmentRepository.new
+    e.load_data({:enrollment => {:kindergarten => "./data/kindergartners in full-day program.csv"}})
+    enrollment = e.find_by_name("academy 20")
+    rate = enrollment.kindergarten_participation["2007"]
+    assert_equal "0.39159", rate
   end
 end

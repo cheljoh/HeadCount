@@ -16,7 +16,7 @@ class EnrollmentRepository
 
     hashes = {}
 
-    contents.each do |row|
+    contents.each do |row| #need to do input validation for district and year
       district = row[:location].upcase
       if !hashes.has_key?(district)
         hashes[district] = {}
