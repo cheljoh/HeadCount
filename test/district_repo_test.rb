@@ -11,4 +11,9 @@ class DistrictRepositoryTest < Minitest::Test
   #     assert_equal 0.125, district.economic_profile.free_or_reduced_lunch_in_year(2012)
   #   end
   # end
+
+  def test_a_method
+    district = DistrictRepository.new
+    assert district.respond_to?(:district_hash)
+  end
 end
