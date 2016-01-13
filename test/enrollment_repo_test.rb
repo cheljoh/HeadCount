@@ -30,3 +30,5 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert_equal "0.39159", rate
   end
 end
+
+#hello
