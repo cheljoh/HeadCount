@@ -10,12 +10,11 @@ class DistrictRepository
     @districts = {}
   end
 
-  def load_data(hash)
+  def load_data(hash) #search through enrollment hash, create a new district instance for each one 
     er = EnrollmentRepository.new
     er.load_data(hash)
-
     er.enrollments.each do |key, value|
-      d = District.new({:name => key}) #:enrollment = er.find_by_name(key)})
+      d = District.new({:name => key})
       districts[key] = d
     end
   end
@@ -24,7 +23,7 @@ class DistrictRepository
     districts[district_name.upcase]
   end
 
-  def find_all_matching(name_fragment) #returns [] or one or more matches whcih contain the supplied name fragment
+  def find_all_matching(name_fragment)
     matching_districts = districts.select do |key, value|
       key.include?(name_fragment.upcase)
     end

@@ -6,14 +6,14 @@ class Enrollment
     @kindergarten_participation = hash[:kindergarten_participation]
   end
 
-  def kindergarten_participation_by_year #needs to return value
+  def kindergarten_participation_by_year 
     truncated_years = kindergarten_participation.map do |key, value|
       [key, truncate_number(value)]
     end.to_h
     truncated_years
   end
 
-  def kindergarten_participation_in_year(year) #year is fixnum, should return nil given unknown year
+  def kindergarten_participation_in_year(year)
     if kindergarten_participation.keys.include?(year)
       value = kindergarten_participation[year]
       final_value = truncate_number(value)
@@ -26,4 +26,3 @@ class Enrollment
   end
 
 end
-#e = Enrollment.new({:name => "ACADEMY 20", :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})

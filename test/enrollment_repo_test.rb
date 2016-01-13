@@ -17,15 +17,14 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_kindergarten_rate_adams
-    @enrollment.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
-    #path = File.expand_path("./data", __dir__)
+    @enrollment.load_data({:enrollment => {:kindergarten => "./test/fixtures/Kindergartners in full-day program.csv"}})
     find_name = @enrollment.find_by_name("adams county 14")
     rate = find_name.kindergarten_participation["2009"]
     assert_equal "1", rate
   end
 
   def test_kindergarten_rate_academy_20_2007
-    @enrollment.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    @enrollment.load_data({:enrollment => {:kindergarten => "./test/fixtures/Kindergartners in full-day program.csv"}})
     find_name = @enrollment.find_by_name("academy 20")
     rate = find_name.kindergarten_participation["2007"]
     assert_equal "0.39159", rate
