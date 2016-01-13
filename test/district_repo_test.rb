@@ -12,8 +12,29 @@ class DistrictRepositoryTest < Minitest::Test
   #   end
   # end
 
+  def setup
+    @district = DistrictRepository.new
+  end
+
   def test_a_method
-    district = DistrictRepository.new
-    assert district.respond_to?(:load_data)
+    assert @district.respond_to?(:load_data)
+  end
+
+  def test_does_find_by_name_return_district_object
+    @district.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    district_object = @district.find_by_name("academy 20")
+    assert_equal District, district_object.class
+  end
+
+  def test_does_an_incorrect_name_return_nil_for_find_by_name
+    @district.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    district_object = @district.find_by_name("hello")
+    assert_equal nil, district_object
+  end
+
+  def test_find_all_matching
+    @district.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    district_objects = @district.find_all_matching("academy 20")
+    assert_equal 11, district_objects.count
   end
 end
