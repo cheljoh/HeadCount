@@ -18,8 +18,8 @@ class EnrollmentRepository
       if !hashes.has_key?(district)
         hashes[district] = {}
       end
-      year = row[:timeframe]
-      rate = row[:data]
+      year = row[:timeframe].to_i
+      rate = row[:data].to_f
       hashes.fetch(district)[year] = rate
     end
     # All hashes are built, make Enrollment objects
@@ -34,3 +34,8 @@ class EnrollmentRepository
     enrollments[name.upcase] #name is key
   end
 end
+
+# @enrollment = EnrollmentRepository.new
+# @enrollment.load_data({:enrollment => {:kindergarten => "../test/fixtures/Kindergartners in full-day program.csv"}})
+# puts @enrollment.enrollments
+#puts @enrollment.find_by_name("hello")

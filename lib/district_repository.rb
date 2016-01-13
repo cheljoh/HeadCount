@@ -1,5 +1,5 @@
 require 'csv'
-require_relative 'enrollment_repo'
+require_relative 'enrollment_repository'
 require_relative 'district'
 
 class DistrictRepository
@@ -10,7 +10,7 @@ class DistrictRepository
     @districts = {}
   end
 
-  def load_data(hash) #search through enrollment hash, create a new district instance for each one 
+  def load_data(hash) #search through enrollment hash, create a new district instance for each one
     er = EnrollmentRepository.new
     er.load_data(hash)
     er.enrollments.each do |key, value|
