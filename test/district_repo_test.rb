@@ -1,4 +1,5 @@
 require './lib/district_repository'
+require './lib/enrollment'
 require_relative 'test_helper'
 
 class DistrictRepositoryTest < Minitest::Test
@@ -15,7 +16,7 @@ class DistrictRepositoryTest < Minitest::Test
   def setup
     @district = DistrictRepository.new
     @district.load_data({:enrollment => {:kindergarten => "./test/fixtures/Kindergartners in full-day program.csv"}})
-    #could make this a class variable @@ and use all files 
+    #could make this a class variable @@ and use all files
   end
 
   def test_a_method
@@ -51,4 +52,10 @@ class DistrictRepositoryTest < Minitest::Test
     district_objects = @district.find_all_matching("o")
     assert_equal 6, district_objects.count
   end
+
+  def test_district_contains_enrollment_attribute
+    district = @district.find_by_name("ACADEMY 20")
+    assert_equal 0.436, district.enrollment.kindergarten_participation_in_year(2010)
+  end
+
 end

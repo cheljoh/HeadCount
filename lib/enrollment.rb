@@ -6,9 +6,9 @@ class Enrollment
     @kindergarten_participation = hash[:kindergarten_participation]
   end
 
-  def kindergarten_participation_by_year 
-    truncated_years = kindergarten_participation.map do |key, value|
-      [key, truncate_number(value)]
+  def kindergarten_participation_by_year
+    truncated_years = kindergarten_participation.map do |year, rate|
+      [year, truncate_number(rate)]
     end.to_h
     truncated_years
   end

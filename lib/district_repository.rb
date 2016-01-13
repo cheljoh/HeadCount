@@ -1,5 +1,6 @@
 require 'csv'
 require_relative 'enrollment_repository'
+require_relative 'enrollment'
 require_relative 'district'
 
 class DistrictRepository
@@ -11,11 +12,11 @@ class DistrictRepository
   end
 
   def load_data(hash) #search through enrollment hash, create a new district instance for each one
-    er = EnrollmentRepository.new
-    er.load_data(hash)
-    er.enrollments.each do |key, value|
-      d = District.new({:name => key})
-      districts[key] = d
+    enrollment_repo = EnrollmentRepository.new
+    enrollment_repo.load_data(hash)
+    enrollment_repo.enrollment_objects.each do |district_name, enrollment_object|
+      d = District.new({:name => district_name, :enrollment => enrollment_object}) #need to set enrollment to something
+      districts[district_name] = d
     end
   end
 
@@ -24,13 +25,23 @@ class DistrictRepository
   end
 
   def find_all_matching(name_fragment)
-    matching_districts = districts.select do |key, value|
-      key.include?(name_fragment.upcase)
+    matching_districts = districts.select do |district_name|
+      district_name.include?(name_fragment.upcase)
     end
     matching_districts.values
   end
 
 end
+
+# dr = DistrictRepository.new
+# dr.load_data({
+#   :enrollment => {
+#     :kindergarten => "../data/Kindergartners in full-day program.csv"
+#   }
+# })
+#
+# district = dr.find_by_name("ACADEMY 20")
+# puts district.enrollment.kindergarten_participation_in_year(2010)
 
 
 

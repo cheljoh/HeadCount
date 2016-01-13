@@ -3,15 +3,17 @@ require_relative 'enrollment'
 
 class EnrollmentRepository
 
-  attr_accessor :enrollments
+  attr_accessor :enrollment_objects
 
   def initialize
-    @enrollments = {}
+    @enrollment_objects = {}
   end
 
   def load_data(hash)
-    data_path = hash[:enrollment][:kindergarten]
+    data_path = hash[:enrollment][:kindergarten] #key of  hash
     contents = CSV.open data_path, headers: true, header_converters: :symbol
+
+    # First, construct hashes which = {district => {year => rate}}
     hashes = {}
     contents.each do |row| #need to do input validation for district and year
       district = row[:location].upcase
@@ -22,16 +24,18 @@ class EnrollmentRepository
       rate = row[:data].to_f
       hashes.fetch(district)[year] = rate
     end
-    # All hashes are built, make Enrollment objects
-    hashes.each do |key, value|
-      enrollment = Enrollment.new({:name => key, :kindergarten_participation => value})
-      enrollments[key] = enrollment
+
+    # All hashes are built, make Enrollment objects which require a
+    # {district => {year => rate}} hash to construct
+    hashes.each do |district_name, participation_hash|
+      enrollment = Enrollment.new({:name => district_name, :kindergarten_participation => participation_hash}) #inner hash is kindergarten_participation
+      enrollment_objects[district_name] = enrollment
     end
 
   end
 
   def find_by_name(name)
-    enrollments[name.upcase] #name is key
+    enrollment_objects[name.upcase] #name is key
   end
 end
 
