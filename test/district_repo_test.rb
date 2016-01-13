@@ -32,9 +32,21 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal nil, district_object
   end
 
-  def test_find_all_matching
+  def test_find_one_matching_name_fragment
     @district.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
-    district_objects = @district.find_all_matching("academy 20")
-    assert_equal 11, district_objects.count
+    district_objects = @district.find_all_matching("aca")
+    assert_equal 1, district_objects.count
+  end
+
+  def test_find_multiple_matching_name_fragments
+    @district.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    district_objects = @district.find_all_matching("co")
+    assert_equal 33, district_objects.count
+  end
+
+  def test_unmatched_name_fragment_returns_empty_array
+    @district.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    district_objects = @district.find_all_matching("hello")
+    assert_equal [], district_objects
   end
 end

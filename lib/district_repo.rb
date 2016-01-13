@@ -25,32 +25,14 @@ class DistrictRepository
   end
 
   def find_all_matching(name_fragment) #returns [] or one or more matches whcih contain the supplied name fragment
-  #   matching_districts = []
-  #   districts.each do |key, value|
-  #     if key.include?(name_fragment.upcase)
-  #       matching_districts << key
-  #     end
-  #   end
-  #   matching_districts
-  # end
-
-  matching_districts = districts.collect do |key, value|
-    key.include?(name_fragment.upcase)
-
+    matching_districts = districts.select do |key, value|
+      key.include?(name_fragment.upcase)
+    end
+    matching_districts.values
   end
-  #matching_districts
-end
 
 end
 
-dr = DistrictRepository.new
-dr.load_data({
-  :enrollment => {
-    :kindergarten => "../data/Kindergartners in full-day program.csv"
-  }
-})
-district = dr.find_all_matching("acade")
-puts district
 
 
 
