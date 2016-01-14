@@ -1,5 +1,7 @@
 require './lib/enrollment'
 require_relative 'test_helper'
+require './lib/district_repository'
+
 
 class EnrollmentTest < Minitest::Test
   # class TestEconomicProfile < Minitest::Test
@@ -23,11 +25,6 @@ class EnrollmentTest < Minitest::Test
 
   def test_participation_with_known_year
     assert_equal 0.391, @enrollment.kindergarten_participation_in_year(2010)
-  end
-
-  def test_does_truncate_method_work
-    value = 0.2677
-    assert_equal 0.267, @enrollment.truncate_number(value)
   end
 
   def test_participation_by_year
