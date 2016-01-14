@@ -53,6 +53,34 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert enrollment.is_a?(Enrollment)
     assert_in_delta 0.144, enrollment.kindergarten_participation_in_year(2004), 0.005 #this is failing
   end
+
+  def test_high_school_graduation_by_year
+    @enrollment.load_data({ :enrollment => { :kindergarten => "./test/fixtures/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./test/fixtures/High school graduation rates.csv"}})
+    enrollment = @enrollment.find_by_name("ACADEMY 20")
+
+    expected = ({2010=>0.895, 2011=>0.895, 2012=>0.889, 2013=>0.913, 2014=>0.898})
+
+    assert_equal expected, enrollment.graduation_rate_by_year
+  end
+
+  def test_high_school_graduation_in_year
+    @enrollment.load_data({ :enrollment => { :kindergarten => "./test/fixtures/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./test/fixtures/High school graduation rates.csv"}})
+    enrollment = @enrollment.find_by_name("ACADEMY 20")
+    assert_equal 0.895, enrollment.graduation_rate_in_year(2010)
+  end
+
+  def test_does_find_by_name_return_Enrollment_object
+    @enrollment.load_data({ :enrollment => { :kindergarten => "./test/fixtures/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./test/fixtures/High school graduation rates.csv"}})
+    enrollment = @enrollment.find_by_name("ACADEMY 20")
+    assert_equal Enrollment, enrollment.class
+  end
+
+  def test_graduation_rate_in_unknown_year_returns_nil
+
+  end
 end
 
 #hello
