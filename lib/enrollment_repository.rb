@@ -28,14 +28,12 @@ class EnrollmentRepository
         enrollment = Enrollment.new({:name => district_name, :kindergarten_participation => participation_hash})
                                    #:high_school_graduation_rates => graduation_hash}) #inner hash is kindergarten_participation
       end
-
       enrollment_objects[district_name] = enrollment
     end
   end
 
   def load_path(data_path) # return participation_hash
       contents = CSV.open data_path, headers: true, header_converters: :symbol
-
       # First, construct hashes which = {district => {year => rate}}
       hashes = {}
       contents.each do |row| #need to do input validation for district and year
@@ -47,7 +45,6 @@ class EnrollmentRepository
         rate = row[:data].to_f
         hashes.fetch(district)[year] = rate
       end
-
       return hashes
   end
 
