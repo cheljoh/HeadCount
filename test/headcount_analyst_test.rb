@@ -27,4 +27,24 @@ class HeadcountAnalystTest < Minitest::Test
                 2009=>0.735, 2010=>0.822, 2011=>0.922, 2012=>0.901, 2013=>0.918, 2014=>0.924})
     assert_equal expected, trends
   end
+
+  def test_graduation_rate_variation
+    rate = @headcount_analyst.graduation_rate_variation('Academy 20', :against => 'COLORADO')
+    assert_equal 1.194, rate
+  end
+
+  def test_kindergarten_participation_against_high_school_graduation
+    kindergarten_graduation_variance = @headcount_analyst.kindergarten_participation_against_high_school_graduation("Academy 20")
+    assert_equal 0.641, kindergarten_graduation_variance
+  end
+
+  def test_kindergarten_participation_correlates_with_high_school_graduation_district_true
+    does_it_correlate = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    assert does_it_correlate
+  end
+
+  def test_kindergarten_participation_correlates_with_high_school_graduation_district_false 
+    does_it_correlate = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(for: 'ADAMS COUNTY 14')
+    refute does_it_correlate
+  end
 end
