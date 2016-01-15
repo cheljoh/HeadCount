@@ -66,15 +66,32 @@ class EnrollmentRepository
       # First, construct hashes which = {district => {year => rate}}
       hashes = {}
       contents.each do |row| #need to do input validation for district and year
-        district = row[:location].upcase
-        if !hashes.has_key?(district)
-          hashes[district] = {}
+        district_name = row[:location].upcase
+        if !hashes.has_key?(district_name)
+          hashes[district_name] = {}
         end
-        year = row[:timeframe].to_i
-        rate = row[:data].to_f
-        hashes.fetch(district)[year] = rate
+
+        if row[:data] != "N/A"
+          year = row[:timeframe].to_i
+          rate = row[:data].to_f
+          hashes.fetch(district_name)[year] = rate
+        end
       end
-      return hashes
+
+      cleaned_hashes = clean_bad_data(hashes)
+      return cleaned_hashes
+  end
+
+  def clean_bad_data(hashes)
+    cleaned_hashes = {}
+
+    hashes.each do |key, value| #only get districs that have good values
+      if value.count != 0
+        cleaned_hashes[key] = value
+      end
+    end
+
+    cleaned_hashes
   end
 
   def find_by_name(name)

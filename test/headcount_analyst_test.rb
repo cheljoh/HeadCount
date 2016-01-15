@@ -43,8 +43,18 @@ class HeadcountAnalystTest < Minitest::Test
     assert does_it_correlate
   end
 
-  def test_kindergarten_participation_correlates_with_high_school_graduation_district_false 
+  def test_kindergarten_participation_correlates_with_high_school_graduation_district_false
     does_it_correlate = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(for: 'ADAMS COUNTY 14')
     refute does_it_correlate
+  end
+
+  def test_kindergarten_participation_correlates_with_high_school_graduation_statewide
+    statewide_correlation = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:for => 'STATEWIDE')
+    refute statewide_correlation
+  end
+
+  def test_kindergarten_participation_correlates_with_high_school_graduation_multiple_districts
+    distric_correlation = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
+    assert distric_correlation
   end
 end

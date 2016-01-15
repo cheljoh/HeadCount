@@ -38,6 +38,8 @@ class HeadcountAnalyst
   end
 
   def compute_average(values)
+    # require 'pry'
+    # binding.pry
     values.inject(0) do |sum, value|
       sum + value
     end/(values.count)
@@ -65,23 +67,53 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(hash)
-    correlation = false
-    district_name = hash[:for]
+    #hash.keys
+    #comparison = hash[:for]
+    if hash.values != ['STATEWIDE'] && hash.keys == [:for]
+      correlation = correlation_for_single_district(hash[:for])
+    elsif hash.values == ["STATEWIDE"]
+      correlation = statewide_correlation
+    elsif hash.values.class == Array
+      districts = hash[:across]
+      correlations = districts.map do |district|
+          correlation_for_single_district(district)
+      end
+      correlation = compare_true_and_false_values(correlations)
+    end
+    correlation
+  end
+
+  def statewide_correlation
+    all_districts = @district_repository.districts
+    correlations = all_districts.each_key.map do |district|
+       correlation_for_single_district(district) #fails on east yuma county because of NA
+    end
+    compare_true_and_false_values(correlations)
+  end
+
+  def compare_true_and_false_values(correlations)
+    true_correlations = correlations.select {|value| value == true }
+    number_true, total_number_of_districts = true_correlations.count.to_f, correlations.count.to_f
+    percent_true = number_true/total_number_of_districts
+    correlation = (percent_true > 0.7)
+  end
+
+  def correlation_for_single_district(district_name)
     kindergarten_graduation_variance = kindergarten_participation_against_high_school_graduation(district_name)
     correlation = true if kindergarten_graduation_variance >= 0.6 && kindergarten_graduation_variance <= 1.5
     correlation
-    # neeed to load all districts with their kindergarten variation and high school graduation divided by statewide, then divide kind and high
-    # need entire
-    # enrollment_repo = EnrollmentRepository.new
-    # enrollment_repo.enrollment_objects
   end
 
 end
 
-# dr = DistrictRepository.new
-# headcount_analyst = HeadcountAnalyst.new(dr)
-# # puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
-# puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation
+
+
+
+#dr = DistrictRepository.new
+#headcount_analyst = HeadcountAnalyst.new(dr)
+# puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(for: 'academy 20')
+# puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:for => 'STATEWIDE')
+#puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
 
 
 
