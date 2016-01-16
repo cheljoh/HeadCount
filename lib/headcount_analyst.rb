@@ -38,8 +38,6 @@ class HeadcountAnalyst
   end
 
   def compute_average(values)
-    # require 'pry'
-    # binding.pry
     values.inject(0) do |sum, value|
       sum + value
     end/(values.count)

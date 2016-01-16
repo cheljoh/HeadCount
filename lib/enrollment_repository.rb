@@ -64,25 +64,25 @@ class EnrollmentRepository
   def load_path(data_path) # return participation_hash
       contents = CSV.open data_path, headers: true, header_converters: :symbol
       # First, construct hashes which = {district => {year => rate}}
-      hashes = {}
+      district_hashes = {}
       contents.each do |row| #need to do input validation for district and year
         district_name = row[:location].upcase
-        if !hashes.has_key?(district_name)
-          hashes[district_name] = {}
+        if !district_hashes.has_key?(district_name)
+          district_hashes[district_name] = {}
         end
 
         if row[:data] != "N/A"
           year = row[:timeframe].to_i
           rate = row[:data].to_f
-          hashes.fetch(district_name)[year] = rate
+          district_hashes.fetch(district_name)[year] = rate
         end
       end
 
-      cleaned_hashes = clean_bad_data(hashes)
+      cleaned_hashes = clean_bad_data(district_hashes)
       return cleaned_hashes
   end
 
-  def clean_bad_data(hashes)
+  def clean_bad_data(hashes) #make test that makes sure bad data is out
     cleaned_hashes = {}
 
     hashes.each do |key, value| #only get districs that have good values
