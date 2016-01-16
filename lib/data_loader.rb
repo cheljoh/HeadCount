@@ -1,3 +1,4 @@
+require_relative 'truncate'
 
 class DataLoader
 
@@ -20,32 +21,32 @@ class DataLoader
   end
 
   def testing_by_grade_row(data, row)
-      scores_by_subject = {}
       district_name = row[:location].upcase
-      data = check_if_new_district(district_name, data, row)
+      data = initialize_new_key(district_name, data)
       year = row[:timeframe].to_i
       rate = row[:data].to_f
       subject = row[:score]
-      scores_by_subject[subject] = rate
-      data.fetch(district_name)[year] = scores_by_subject
+      year_hash = initialize_new_key(year, data.fetch(district_name))
+      year_hash[year][subject] = Truncate.truncate_number(rate)
+      data[district_name] = year_hash
       data
   end
 
   def subject_proficiency_by_ethnicity_row(data, row)
     scores_by_ethnicity = {}
     district_name = row[:location].upcase
-    data = check_if_new_district(district_name, data, row)
+    data = initialize_new_key(district_name, data)
     year = row[:timeframe].to_i
     rate = row[:data].to_f
     ethnicity = row[:race_ethnicity]
-    scores_by_ethnicity[year] = rate
+    scores_by_ethnicity[year] = Truncate.truncate_number(rate)
     data.fetch(district_name)[ethnicity] = scores_by_ethnicity
     data
   end
 
-  def check_if_new_district(district_name, data, row)
-    if !data.has_key?(district_name)
-        data[district_name] = {}
+  def initialize_new_key(key, data)
+    if !data.has_key?(key)
+        data[key] = {}
     end
     data
   end

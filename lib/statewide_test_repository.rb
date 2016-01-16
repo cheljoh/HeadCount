@@ -6,6 +6,12 @@ require_relative 'statewide_test'
 
 class StatewideTestRepository
 
+  attr_reader :statewide_test_objects
+
+  def initialize
+    @statewide_test_objects = {}
+  end
+
   def load_data(hash)
     loader = DataLoader.new
     third_grade_data = loader.load_data(:third_grade, hash[:statewide_testing][:third_grade])
@@ -13,16 +19,16 @@ class StatewideTestRepository
     math_by_ethnicity = loader.load_data(:math, hash[:statewide_testing][:math])
     reading_by_ethnicity = loader.load_data(:reading, hash[:statewide_testing][:reading])
     writing_by_ethnicity = loader.load_data(:writing, hash[:statewide_testing][:writing])
-
     #all_districts = (third_grade_data.keys + math_by_ethnicity.keys).uniq
-
+    require 'pry'
+    binding.pry
     # all_districts = (kindergarten_data_by_district.keys + hs_data_by_district.keys).uniq
-
     third_grade_data.each_key do |district_name|
-      # require 'pry'
-      # binding.pry
+      # dont like using keys from one hash- make master list of districts?
+      #need to use block var
       statewide_test = StatewideTest.new({:third_grade => third_grade_data, :eighth_grade => eighth_grade_data,
                                           :math => math_by_ethnicity, :reading => reading_by_ethnicity, :writing => writing_by_ethnicity})
+      statewide_test_objects[district_name] = statewide_test
     end
 
     # district_hashes = {}
@@ -94,22 +100,27 @@ class StatewideTestRepository
 
   end
 
-  def find_by_name #returns nil or instance of StatewideTest with case insensitive search
-
+  def find_by_name(district_name) #returns nil or instance of StatewideTest with case insensitive search
+    statewide_test_objects[district_name.upcase]
   end
 
 end
 
 
-str = StatewideTestRepository.new
-puts str.load_data({
-  :statewide_testing => {
-    :third_grade => "../data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-    :eighth_grade => "../data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-    :math => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-    :reading => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-    :writing => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
-  }
-})
-# str = str.find_by_name("ACADEMY 20")
+# str = StatewideTestRepository.new
+# str.load_data({
+#   :statewide_testing => {
+#     :third_grade => "../data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+#     :eighth_grade => "../data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+#     :math => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+#     :reading => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+#     :writing => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+#   }
+# })
+#
+# #puts str.statewide_test_objects
+# puts str.find_by_name("ACADEMY 20")
 # => <StatewideTest>
+#
+# statewide_test = StatewideTest.new
+# statewide_test.proficient_by_grade(3)
