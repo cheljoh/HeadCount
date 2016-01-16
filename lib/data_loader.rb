@@ -25,7 +25,7 @@ class DataLoader
       data = initialize_new_key(district_name, data)
       year = row[:timeframe].to_i
       rate = row[:data].to_f
-      subject = row[:score]
+      subject = row[:score].to_sym.downcase
       year_hash = initialize_new_key(year, data.fetch(district_name))
       year_hash[year][subject] = Truncate.truncate_number(rate)
       data[district_name] = year_hash
@@ -38,9 +38,10 @@ class DataLoader
     data = initialize_new_key(district_name, data)
     year = row[:timeframe].to_i
     rate = row[:data].to_f
-    ethnicity = row[:race_ethnicity]
-    scores_by_ethnicity[year] = Truncate.truncate_number(rate)
-    data.fetch(district_name)[ethnicity] = scores_by_ethnicity
+    ethnicity = row[:race_ethnicity].gsub("Hawaiian/", "").gsub(" ", "_").to_sym.downcase
+    ethnicity_hash = initialize_new_key(ethnicity, data.fetch(district_name))
+    ethnicity_hash.fetch(ethnicity)[year] = Truncate.truncate_number(rate)
+    data[district_name] = ethnicity_hash
     data
   end
 
