@@ -13,10 +13,12 @@ class DataLoader
   end
 
   def add_row(category, data, row)
-    if category == :third_grade || category == :eighth_grade
+    if category == :testing_by_grade
       data = testing_by_grade_row(data, row)
-    else
+    elsif category == :ethnicity
       data = subject_proficiency_by_ethnicity_row(data, row)
+    elsif category == :participation
+      data = participation_rates(data, row)
     end
   end
 
@@ -43,6 +45,31 @@ class DataLoader
     ethnicity_hash.fetch(ethnicity)[year] = Truncate.truncate_number(rate)
     data[district_name] = ethnicity_hash
     data
+  end
+
+  def participation_rates(data, row) # return participation_hash
+      district_name = row[:location].upcase
+      data = initialize_new_key(district_name, data)
+      district_hashes = {}
+        if row[:data] != "N/A"
+          year = row[:timeframe].to_i
+          rate = row[:data].to_f
+          data.fetch(district_name)[year] = rate
+        end
+      cleaned_hashes = clean_bad_data(data)
+      return cleaned_hashes
+  end
+
+  def clean_bad_data(hashes) #make test that makes sure bad data is out
+    cleaned_hashes = {}
+
+    hashes.each do |key, value| #only get districs that have good values
+      if value.count != 0
+        cleaned_hashes[key] = value #need to have west yuma in though
+      end
+    end
+
+    cleaned_hashes
   end
 
   def initialize_new_key(key, data)

@@ -13,13 +13,12 @@ class StatewideTestRepository
   end
 
   def load_data(hash)
-    #binding.pry
-    loader = DataLoader.new #if load with districts, dont have statewide_testing path
-    third_grade_data = loader.load_data(:third_grade, hash[:statewide_testing][:third_grade])
-    eighth_grade_data = loader.load_data(:eighth_grade, hash[:statewide_testing][:eighth_grade])
-    math_by_ethnicity = loader.load_data(:math, hash[:statewide_testing][:math])
-    reading_by_ethnicity = loader.load_data(:reading, hash[:statewide_testing][:reading])
-    writing_by_ethnicity = loader.load_data(:writing, hash[:statewide_testing][:writing])
+    loader = DataLoader.new 
+    third_grade_data = loader.load_data(:testing_by_grade, hash[:statewide_testing][:third_grade])
+    eighth_grade_data = loader.load_data(:testing_by_grade, hash[:statewide_testing][:eighth_grade])
+    math_by_ethnicity = loader.load_data(:ethnicity, hash[:statewide_testing][:math])
+    reading_by_ethnicity = loader.load_data(:ethnicity, hash[:statewide_testing][:reading])
+    writing_by_ethnicity = loader.load_data(:ethnicity, hash[:statewide_testing][:writing])
     third_grade_data.each_key do |district_name|
       # dont like using keys from one hash- make master list of districts?
       statewide_test = StatewideTest.new({:name => district_name, :third_grade => third_grade_data[district_name], :eighth_grade => eighth_grade_data[district_name],
