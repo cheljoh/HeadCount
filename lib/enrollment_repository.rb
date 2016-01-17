@@ -38,8 +38,6 @@ class EnrollmentRepository
     end
 
     participation_hashes = load_path(data_path)
-    # require 'pry'
-    # binding.pry
 
 
     participation_hashes.each_key do |district_name|
@@ -87,7 +85,7 @@ class EnrollmentRepository
 
     hashes.each do |key, value| #only get districs that have good values
       if value.count != 0
-        cleaned_hashes[key] = value
+        cleaned_hashes[key] = value #need to have west yuma in though
       end
     end
 

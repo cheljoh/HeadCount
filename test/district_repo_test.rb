@@ -43,6 +43,20 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 2, district_objects.count
   end
 
+  def test_loading_and_finding_districts #fails because of west yuma
+    dr = DistrictRepository.new
+    dr.load_data({
+                   :enrollment => {
+                     :kindergarten => "./data/Kindergartners in full-day program.csv"
+                   }
+                 })
+    district = dr.find_by_name("ACADEMY 20")
+
+    assert_equal "ACADEMY 20", district.name
+
+    assert_equal 7, dr.find_all_matching("WE").count
+  end
+
   def test_unmatched_name_fragment_returns_empty_array
     district_objects = @district.find_all_matching("hello")
     assert_equal [], district_objects

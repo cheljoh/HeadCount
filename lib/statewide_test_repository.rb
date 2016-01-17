@@ -13,7 +13,8 @@ class StatewideTestRepository
   end
 
   def load_data(hash)
-    loader = DataLoader.new
+    #binding.pry
+    loader = DataLoader.new #if load with districts, dont have statewide_testing path
     third_grade_data = loader.load_data(:third_grade, hash[:statewide_testing][:third_grade])
     eighth_grade_data = loader.load_data(:eighth_grade, hash[:statewide_testing][:eighth_grade])
     math_by_ethnicity = loader.load_data(:math, hash[:statewide_testing][:math])
@@ -26,7 +27,6 @@ class StatewideTestRepository
       statewide_test_objects[district_name] = statewide_test
 
     end
-    binding.pry
   end
 
   def find_by_name(district_name) #returns nil or instance of StatewideTest with case insensitive search

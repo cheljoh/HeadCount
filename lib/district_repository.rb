@@ -2,6 +2,8 @@ require 'csv'
 require_relative 'enrollment_repository'
 require_relative 'enrollment'
 require_relative 'district'
+require_relative 'statewide_test'
+require_relative 'statewide_test_repository'
 
 class DistrictRepository
 
@@ -12,10 +14,42 @@ class DistrictRepository
   end
 
   def load_data(hash) #search through enrollment hash, create a new district instance for each one
+    #enrollment_repo = EnrollmentRepository.new
+    #enrollment_repo.load_data({:enrollment => hash[:enrollment]})
+
+    # if !hash[:enrollment][:statewide_testing].nil?
+    #   statewide_test_repo = StatewideTestRepository.new
+    #   statewide_test_repo.load_data({:statewide_testing => hash[:statewide_testing]})
+    #
+    #   enrollment_repo.enrollment_objects.each_key do |district_name|
+    #     enrollment_object = enrollment_repo.find_by_name(district_name)
+    #     statewide_test_object = statewide_test_repo.find_by_name(district_name)
+    #     d = District.new({:name => district_name, :enrollment => enrollment_object, :statewide_test => statewide_test_object}) #need to set enrollment to something
+    #     districts[district_name] = d
+    #   end
+    # else
+    #   enrollment_repo.enrollment_objects.each do |district_name, enrollment_object|
+    #     d = District.new({:name => district_name, :enrollment => enrollment_object}) #need to set enrollment to something
+    #     districts[district_name] = d
+    #   end
+    # end
+    #load_enrollment = hash.has_key?(:enrollment)
+    #load_statewide_testing = hash.has_key?(:statewide_testing)
+
     enrollment_repo = EnrollmentRepository.new
-    enrollment_repo.load_data(hash)
-    enrollment_repo.enrollment_objects.each do |district_name, enrollment_object|
-      d = District.new({:name => district_name, :enrollment => enrollment_object}) #need to set enrollment to something
+    if hash.has_key?(:enrollment)
+      enrollment_repo.load_data({:enrollment => hash[:enrollment]})
+    end
+
+    statewide_test_repo = StatewideTestRepository.new
+    if hash.has_key?(:statewide_testing)
+      statewide_test_repo.load_data({:statewide_testing => hash[:statewide_testing]})
+    end
+
+    enrollment_repo.enrollment_objects.each_key do |district_name|
+      enrollment_object = enrollment_repo.find_by_name(district_name)
+      statewide_test_object = statewide_test_repo.find_by_name(district_name)
+      d = District.new({:name => district_name, :enrollment => enrollment_object, :statewide_test => statewide_test_object}) #need to set enrollment to something
       districts[district_name] = d
     end
   end
@@ -33,6 +67,32 @@ class DistrictRepository
 
 end
 
+
+# When the DistrictRepository is built from the data folder, an instance of District
+# should now be connected to an instance of StatewideTest:
+
+# dr = DistrictRepository.new
+# dr.load_data({
+#   :enrollment => {
+#     :kindergarten => "../data/Kindergartners in full-day program.csv",
+#     :high_school_graduation => "../data/High school graduation rates.csv"}
+  # },
+  # :statewide_testing => {
+  #   :third_grade => "../data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+  #   :eighth_grade => "../data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+  #   :math => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+  #   :reading => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+  #   :writing => "../data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+  # }
+# })
+# puts district = dr.find_by_name("ACADEMY 20")
+# puts district.statewide_test
+# puts statewide_test = district.statewide_test
+#
+#
+# enrollment_repo = EnrollmentRepository.new
+# enrollment_repo.load_data(hash)
+#
 # dr = DistrictRepository.new
 # dr.load_data({
 #   :enrollment => {
@@ -70,13 +130,4 @@ end
 #     #hashes.fetch(district)
 #   end
 #   # district objects
-# end
-
-# Dir.foreach('../data') do |item| #prints out name of each district
-#   next if File.directory? item
-#   contents = CSV.open "../data/#{item}", headers: true, header_converters: :symbol
-#   contents.each do |row|
-#   district = row[:location]
-#   puts district
-#   end
 # end
