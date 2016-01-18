@@ -119,7 +119,7 @@ class HeadcountAnalyst
       min_year, max_year = testing_hash.keys.min_by {|year| year}, testing_hash.keys.max_by {|year| year}
       min_results, max_results = testing_hash[min_year][subject], testing_hash[max_year][subject]
       total_growth = (max_results - min_results)/(max_year - min_year)
-      growth_by_district[district_name] = total_growth
+      growth_by_district[district_name] = Truncate.truncate_number(total_growth)
     end
     growth_by_district
   end
@@ -144,9 +144,9 @@ class HeadcountAnalyst
       end
 
       if weights.nil?
-        growth_by_district[district_name] = compute_average(growths.values)
+        growth_by_district[district_name] = Truncate.truncate_number(compute_average(growths.values))
       else
-        growth_by_district[district_name] = compute_weighted_average(growths.values, weights.values)
+        growth_by_district[district_name] = Truncate.truncate_number(compute_weighted_average(growths.values, weights.values))
       end
     end
 
@@ -157,6 +157,7 @@ class HeadcountAnalyst
     if weights.inject(0){|sum, number| sum + number} != 1.0
       raise UnknownDataError
     end
+
     average = 0
     values.each_index do |index|
       average += values[index]*weights[index]
@@ -183,15 +184,15 @@ class HeadcountAnalyst
     if !valid_grades.include?(grade)
       insufficient_information_error(grade)
     end
-    if subject.nil? && n_districts.nil?
+    if subject.nil? && n_districts.nil? #for only grade
       growth_by_district_all_subjects = growth_percentages_for_all_districts_in_all_subjects(grade, weights)
       return find_max_number(growth_by_district_all_subjects) #.max_by {|key, number| number}
     else
       growth_by_district = growth_percentages_for_all_districts_by_subject(grade, subject)
     end
-    if hash[:top].nil?
+    if hash[:top].nil? #for only grade and subject
       find_max_number(growth_by_district) #.max_by {|key, number| number}
-    else
+    else #for top, grade, and subjects
       find_top_n_districts(growth_by_district, n_districts)
     end
   end
@@ -199,6 +200,8 @@ class HeadcountAnalyst
   def find_top_n_districts(growth_by_district, n_districts)
     sorted = growth_by_district.sort_by {|key, value| value}
     sorted.last(n_districts)
+    # require 'pry'
+    # binding.pry
   end
 
   def insufficient_information_error(grade)

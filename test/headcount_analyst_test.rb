@@ -54,8 +54,53 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_kindergarten_participation_correlates_with_high_school_graduation_multiple_districts
-    distric_correlation = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
-    assert distric_correlation
+    district_correlation = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
+    assert district_correlation
+  end
+
+  def test_top_statewide_test_year_over_year_by_subject_and_grade
+    assert_equal ["ASPEN 1", 0.125], @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :writing)
+  end
+
+  def test_top_statewide_test_year_over_year_by_subject_and_grade_three_leaders
+    expected = [["CENTENNIAL R-1", 0.088], ["WESTMINSTER 50", 0.099], ["SPRINGFIELD RE-4", 0.149]]
+    assert_equal expected, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+  end
+
+  def test_top_statewide_test_year_over_year_for_all_subjects
+    expected = ["SPRINGFIELD RE-4", 0.132]
+    assert_equal expected, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3)
+  end
+
+  def test_top_statewide_test_year_over_year_for_all_subjects_weighted_subjects
+    expected = ["PLATEAU RE-5", 0.101]
+    assert_equal expected, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+  end
+
+  def test_weighted_subjects
+    skip
+    top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+        assert_equal "OURAY R-1", top_performer.first
+        assert_in_delta 0.153, top_performer.last, 0.005
+  end
+
+  def test_top_overall_subjects
+    skip
+    assert_equal "SANGRE DE CRISTO RE-22J", ha.top_statewide_test_year_over_year_growth(grade: 3).first
+    assert_in_delta 0.071, ha.top_statewide_test_year_over_year_growth(grade: 3).last, 0.005
+  end
+
+
+  def test_top_statewide_test_year_over_year_for_all_subjects_weighted_averages_do_not_add_up_to_one
+    skip
+  end
+
+  def test_insufficient_information_error
+    skip
+  end
+
+  def test_unknown_data_error
+    skip
   end
 
   #add new tests for statewide data
