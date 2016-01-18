@@ -82,7 +82,7 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_proficient_by_grade_for_unknown_grade
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do #needs to be UnknownDataError?
       @statewide_test.proficient_by_grade(1)
     end
   end
@@ -151,7 +151,7 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_proficiency_for_unknown_ethnicity
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownRaceError do #needs to be UnknownDataError?
       @statewide_test.proficient_by_race_or_ethnicity(:fish)
     end
   end
@@ -169,19 +169,19 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_invalid_year_for_proficient_for_subject_by_grade_in_year
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do #needs to be UnknownDataError?
       @statewide_test.proficient_for_subject_by_grade_in_year(:reading, 3, 1998)
     end
   end
 
   def test_invalid_subject_for_proficient_for_subject_by_grade_in_year
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do #needs to be UnknownDataError?
       @statewide_test.proficient_for_subject_by_grade_in_year(:mammals, 3, 2010)
     end
   end
 
   def test_invalid_grade_for_proficient_for_subject_by_grade_in_year
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do #needs to be UnknownDataError?
       @statewide_test.proficient_for_subject_by_grade_in_year(:reading, 9, 2010)
     end
   end
@@ -199,19 +199,19 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_invalid_subject_for_proficient_for_subject_by_race_in_year
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do #needs to be UnknownDataError?
       @statewide_test.proficient_for_subject_by_race_in_year(:hello, :black, 2012)
     end
   end
 
   def test_invalid_ethnicity_for_proficient_for_subject_by_race_in_year
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do #needs to be UnknownDataError?
       @statewide_test.proficient_for_subject_by_race_in_year(:reading, :fish, 2012)
     end
   end
 
   def test_invalid_year_for_proficient_for_subject_by_race_in_year
-    assert_raises ArgumentError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do #needs to be UnknownDataError?
       @statewide_test.proficient_for_subject_by_race_in_year(:reading, :white, 2000)
     end
   end

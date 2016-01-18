@@ -20,7 +20,7 @@ class StatewideTestRepositoryTest < Minitest::Test
     assert_equal StatewideTest, @str.find_by_name("Academy 20").class
   end
 
-  def test_third_grade_data_attribute_of_statewide_test
+  def test_third_grade_attribute_of_statewide_test
     statewide_test = @str.find_by_name("Academy 20")
     expected =
     {2008=>{:math=>0.857, :reading=>0.866, :writing=>0.671},
@@ -80,7 +80,7 @@ class StatewideTestRepositoryTest < Minitest::Test
     {:all_students=>{2011=>0.719, 2012=>0.705, 2013=>0.72, 2014=>0.715},
     :asian=>{2011=>0.826, 2012=>0.808, 2013=>0.81, 2014=>0.789},
     :black=>{2011=>0.515, 2012=>0.504, 2013=>0.481, 2014=>0.519},
-    :pacific_islander=>{2011=>0.725, 2012=>0.683, 2013=>0.716, 2014=>0.727}, 
+    :pacific_islander=>{2011=>0.725, 2012=>0.683, 2013=>0.716, 2014=>0.727},
     :hispanic=>{2011=>0.606, 2012=>0.597, 2013=>0.623, 2014=>0.624},
     :native_american=>{2011=>0.6, 2012=>0.589, 2013=>0.61, 2014=>0.62},
     :two_or_more=>{2011=>0.727, 2012=>0.718, 2013=>0.747, 2014=>0.731},

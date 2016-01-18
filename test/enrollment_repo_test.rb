@@ -27,7 +27,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     @enrollment.load_data({:enrollment => {:kindergarten => "./test/fixtures/Kindergartners in full-day program.csv"}})
     find_name = @enrollment.find_by_name("academy 20")
     rate = find_name.kindergarten_participation[2007] #district.enrollment.kindergarten_participation in harness
-    assert_equal 0.39159, rate
+    assert_equal 0.391, rate
   end
 
   def test_kindergarten_rate_academy_20_unknown_year_returns_nil

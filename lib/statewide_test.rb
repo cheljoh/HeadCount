@@ -1,3 +1,5 @@
+require_relative 'data_errors'
+
 class StatewideTest
 
 attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
@@ -17,21 +19,23 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     elsif grade == 8
       eighth_grade
     else
-      raise ArgumentError #should be unknown data error, make own class?
+      #raise ArgumentError #should be unknown data error, make own class?
+      unknown_data_error
     end
   end
 
   def proficient_by_race_or_ethnicity(ethnicity) #right now, race is string
     year_hash, data_by_subject = {}
     if valid_ethnicity?(ethnicity)
-      reading_scores, writing_scores, math_scores = reading[ethnicity], writing[ethnicity], math[ethnicity] 
+      reading_scores, writing_scores, math_scores = reading[ethnicity], writing[ethnicity], math[ethnicity]
       math_scores.each_key do |key|
         data_by_subject = {:reading => reading_scores[key], :writing => writing_scores[key], :math => math_scores[key]}
         year_hash[key] = data_by_subject
       end
       year_hash
     else
-      raise ArgumentError #UnknownRaceError
+      #raise ArgumentError #UnknownRaceError
+      unknown_race_error
     end
   end
 
@@ -59,7 +63,8 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     if valid_subject?(subject) && valid_grade?(grade) && valid_year?(year)
       get_data_by_grade_and_year_and_subject(subject, grade, year)
     else
-      raise ArgumentError #UnknownDataError
+      #raise ArgumentError #UnknownDataError
+      unknown_data_error
     end
   end
 
@@ -85,9 +90,18 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     if valid_ethnicity?(ethnicity) && valid_subject?(subject) && valid_year?(year)
       get_data_by_subject_and_ethnicity_and_year(subject, ethnicity, year)
     else
-      raise ArgumentError #UnknownDataError
+      #raise ArgumentError #UnknownDataError
+      unknown_data_error
     end
 
+  end
+
+  def unknown_data_error
+    fail UnknownDataError
+  end
+
+  def unknown_race_error
+    fail UnknownRaceError
   end
 
 end

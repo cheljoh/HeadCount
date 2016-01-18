@@ -22,7 +22,7 @@ class DataLoader
     end
   end
 
-  def testing_by_grade_row(data, row)
+  def testing_by_grade_row(data, row) #need to have something for N/A
       district_name = row[:location].upcase
       data = initialize_new_key(district_name, data)
       year = row[:timeframe].to_i
@@ -54,7 +54,7 @@ class DataLoader
         if row[:data] != "N/A"
           year = row[:timeframe].to_i
           rate = row[:data].to_f
-          data.fetch(district_name)[year] = rate
+          data.fetch(district_name)[year] = Truncate.truncate_number(rate)
         end
       cleaned_hashes = clean_bad_data(data)
       return cleaned_hashes
