@@ -115,11 +115,7 @@ class HeadcountAnalyst
   def growth_percentages_for_all_districts_by_subject(grade, subject)
     growth_by_district = {}
     @district_repository.districts.each do |district_name, district_object|
-      if grade == 3
-          testing_hash = district_object.statewide_test.third_grade
-      else
-          testing_hash = district_object.statewide_test.eighth_grade
-      end
+      testing_hash = get_third_or_eighth_grade_data(district_object, grade)
       min_year, max_year = testing_hash.keys.min_by {|year| year}, testing_hash.keys.max_by {|year| year}
       min_results, max_results = testing_hash[min_year][subject], testing_hash[max_year][subject]
       total_growth = (max_results - min_results)/(max_year - min_year)
@@ -128,14 +124,18 @@ class HeadcountAnalyst
     growth_by_district
   end
 
+  def get_third_or_eighth_grade_data(district_object, grade)
+    if grade == 3
+        district_object.statewide_test.third_grade
+    else
+        district_object.statewide_test.eighth_grade
+    end
+  end
+
   def growth_percentages_for_all_districts_in_all_subjects(grade, weights=nil)
     growth_by_district = {}
     @district_repository.districts.each do |district_name, district_object|
-      if grade == 3
-          testing_hash = district_object.statewide_test.third_grade
-      else
-          testing_hash = district_object.statewide_test.eighth_grade
-      end
+      testing_hash = get_third_or_eighth_grade_data(district_object, grade)
       min_year, max_year = testing_hash.keys.min_by {|year| year}, testing_hash.keys.max_by {|year| year}
 
       growths = {}
@@ -155,9 +155,8 @@ class HeadcountAnalyst
 
   def compute_weighted_average(values, weights)
     if weights.inject(0){|sum, number| sum + number} != 1.0
-      raise ArgumentError("weights must sum to 1")
+      raise UnknownDataError
     end
-
     average = 0
     values.each_index do |index|
       average += values[index]*weights[index]
@@ -217,8 +216,8 @@ end
 
 
 
-#dr = DistrictRepository.new
-#headcount_analyst = HeadcountAnalyst.new(dr)
+# dr = DistrictRepository.new
+# headcount_analyst = HeadcountAnalyst.new(dr)
 #puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :writing)
 #puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
 #puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3)
@@ -226,7 +225,7 @@ end
 
 
 
-#puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+# puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
 #=> [['top district name', growth_1], ['second district name', growth_2], ['third district name', growth_3]]
 
 

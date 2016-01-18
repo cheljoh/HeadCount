@@ -57,4 +57,6 @@ class HeadcountAnalystTest < Minitest::Test
     distric_correlation = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
     assert distric_correlation
   end
+
+  #add new tests for statewide data
 end
