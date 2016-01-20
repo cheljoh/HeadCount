@@ -14,11 +14,11 @@ class DataLoader
 
   def add_row(category, data, row)
     if category == :testing_by_grade
-      data = testing_by_grade_row(data, row)
+      testing_by_grade_row(data, row)
     elsif category == :ethnicity
-      data = subject_proficiency_by_ethnicity_row(data, row)
+      subject_proficiency_by_ethnicity_row(data, row)
     elsif category == :participation
-      data = participation_rates(data, row)
+      participation_rates(data, row)
     end
   end
 

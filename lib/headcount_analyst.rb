@@ -7,7 +7,7 @@ class HeadcountAnalyst
 
 #make headcount analyst class for participation and testing
   def initialize(district_repository)
-    @district_repository = DistrictRepository.new
+    @district_repository = district_repository
     @district_repository.load_data({
       :enrollment => {
         :kindergarten => "./data/Kindergartners in full-day program.csv",
@@ -116,7 +116,7 @@ class HeadcountAnalyst
     true_correlations = correlations.select {|value| value == true }
     number_true, total_number_of_districts = true_correlations.count.to_f, correlations.count.to_f
     percent_true = number_true/total_number_of_districts
-    correlation = (percent_true > 0.7)
+    percent_true > 0.7
   end
 
   def correlation_for_single_district(district_name)
@@ -124,7 +124,7 @@ class HeadcountAnalyst
     if kindergarten_graduation_variance == "N/A"
       return "N/A"
     else
-      correlation = (kindergarten_graduation_variance >= 0.6 && kindergarten_graduation_variance <= 1.5)
+      kindergarten_graduation_variance >= 0.6 && kindergarten_graduation_variance <= 1.5
     end
   end
 
@@ -215,12 +215,9 @@ class HeadcountAnalyst
     subject = hash[:subject]
     n_districts = hash[:top]
     weights = hash[:weighting]
-
-    testing_hash = {}
     if !valid_grades.include?(grade)
       insufficient_information_error(grade)
     end
-
     if subject.nil? && n_districts.nil? #for only grade
       growth_by_district_all_subjects = growth_percentages_for_all_districts_in_all_subjects(grade, weights)
       name_and_growth = find_max_number(growth_by_district_all_subjects) #.max_by {|key, number| number}
@@ -235,7 +232,7 @@ class HeadcountAnalyst
     name_and_growth
   end
 
-  def find_top_n_districts(growth_by_district, n_districts)
+  def find_top_n_districts(growth_by_district, n_districts) #need to change key here
     sorted = growth_by_district.sort_by {|key, value| value}
     sorted.last(n_districts)
   end
@@ -245,7 +242,7 @@ class HeadcountAnalyst
       fail InsufficientInformationError
       "#{InsufficientInformationError}: A grade must be provided to answer this question"
     else
-      fail UnknownDataError
+      fail UnknownDataError #this is apparentely unreachable
       "#{UnknownDataError}: #{grade} is not a known grade"
     end
   end
