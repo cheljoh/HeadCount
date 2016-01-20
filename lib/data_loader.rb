@@ -40,7 +40,6 @@ class DataLoader
   end
 
   def subject_proficiency_by_ethnicity_row(data, row)
-    scores_by_ethnicity = {}
     district_name = row[:location].upcase
     data = initialize_new_key(district_name, data)
 

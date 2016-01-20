@@ -27,14 +27,14 @@ class HeadcountAnalyst
     comparison_name = hash[:against]
     district_average = get_average_enrollment_kindergarten_rate(district_name)
     comparison_average = get_average_enrollment_kindergarten_rate(comparison_name)
-    average = na_divide_and_truncate(district_average, comparison_average)
+    na_divide_and_truncate(district_average, comparison_average)
   end
 
   def graduation_rate_variation(district_name, hash)
     comparison_name = hash[:against]
     district_average = get_average_enrollment_graduation_rate(district_name)
     comparison_average = get_average_enrollment_graduation_rate(comparison_name)
-    average = na_divide_and_truncate(district_average, comparison_average)
+    na_divide_and_truncate(district_average, comparison_average)
   end
 
   def na_divide_and_truncate(value1, value2)
@@ -132,7 +132,7 @@ class HeadcountAnalyst
     growth_by_district = {}
     @district_repository.districts.each do |district_name, district_object|
       testing_hash = get_third_or_eighth_grade_data(district_object, grade)
-      filtered = testing_hash.reject {|key, value| value == "N/A"}
+      filtered = testing_hash.reject {|_or_key, value| value == "N/A"}
       min_year, max_year = filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
       min_results, max_results = filtered[min_year][subject], filtered[max_year][subject]
 
