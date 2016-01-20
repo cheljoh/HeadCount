@@ -132,7 +132,7 @@ class HeadcountAnalyst
     growth_by_district = {}
     @district_repository.districts.each do |district_name, district_object|
       testing_hash = get_third_or_eighth_grade_data(district_object, grade)
-      filtered = testing_hash.reject {|_or_key, value| value == "N/A"}
+      filtered = testing_hash.reject {|_key, value| value == "N/A"}
       min_year, max_year = filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
       min_results, max_results = filtered[min_year][subject], filtered[max_year][subject]
 
@@ -205,8 +205,8 @@ class HeadcountAnalyst
   end
 
   def find_max_number(district_hash)
-    filtered = district_hash.reject{|_or_key, value| value == "N/A"}
-    filtered.max_by {|_or_key, number| number}
+    filtered = district_hash.reject{|_key, value| value == "N/A"}
+    filtered.max_by {|_key, number| number}
   end
 
   def top_statewide_test_year_over_year_growth(hash)
@@ -233,7 +233,7 @@ class HeadcountAnalyst
   end
 
   def find_top_n_districts(growth_by_district, n_districts) #need to change key here
-    sorted = growth_by_district.sort_by {|key, value| value}
+    sorted = growth_by_district.sort_by {|_key, value| value}
     sorted.last(n_districts)
   end
 
