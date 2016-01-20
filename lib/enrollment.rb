@@ -10,33 +10,29 @@ class Enrollment
   end
 
   def kindergarten_participation_by_year
-    truncated_years = kindergarten_participation.map do |year, rate|
-      [year, Truncate.truncate_number(rate)]
+    kindergarten_participation.map do |year, rate|
+      [year, rate]
     end.to_h
-    truncated_years
   end
 
   def kindergarten_participation_in_year(year)
     if kindergarten_participation.keys.include?(year)
       value = kindergarten_participation[year]
-      final_value = Truncate.truncate_number(value)
     end
-      final_value
+      value
   end
 
   def graduation_rate_by_year
-    truncated_years = high_school_graduation_rates.map do |year, rate|
-      [year, Truncate.truncate_number(rate)]
+    high_school_graduation_rates.map do |year, rate|
+      [year, rate]
     end.to_h
-    truncated_years
   end
 
   def graduation_rate_in_year(year)
     if high_school_graduation_rates.keys.include?(year)
       value = high_school_graduation_rates[year]
-      final_value = Truncate.truncate_number(value)
     end
-      final_value
+      value
   end
 
 end

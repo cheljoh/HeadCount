@@ -64,7 +64,7 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_a_single_letter
     district_objects = @district.find_all_matching("o")
-    assert_equal 6, district_objects.count
+    assert_equal 7, district_objects.count
   end
 
   def test_district_contains_enrollment_attribute

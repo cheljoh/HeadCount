@@ -91,6 +91,18 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal 0.071, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3).last
   end
 
+  def test
+    skip
+    testing = str.find_by_name("PLATEAU VALLEY 50")
+    assert_equal "N/A", testing.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
+  end
+
+  def test
+    skip
+    assert_equal "WILEY RE-13 JT", ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).first
+    assert_in_delta 0.3, ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).last, 0.005
+  end
+
 
   def test_top_statewide_test_year_over_year_for_all_subjects_weighted_averages_do_not_add_up_to_one
     skip
