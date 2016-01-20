@@ -205,8 +205,8 @@ class HeadcountAnalyst
   end
 
   def find_max_number(district_hash)
-    filtered = district_hash.reject{|key, value| value == "N/A"}
-    filtered.max_by {|key, number| number}
+    filtered = district_hash.reject{|_or_key, value| value == "N/A"}
+    filtered.max_by {|_or_key, number| number}
   end
 
   def top_statewide_test_year_over_year_growth(hash)
