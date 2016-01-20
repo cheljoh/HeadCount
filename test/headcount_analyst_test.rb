@@ -48,6 +48,7 @@ class HeadcountAnalystTest < Minitest::Test
     refute does_it_correlate
   end
 
+
   def test_kindergarten_participation_correlates_with_high_school_graduation_statewide
     statewide_correlation = @headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:for => 'STATEWIDE')
     refute statewide_correlation
@@ -78,16 +79,16 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_weighted_subjects
-    skip
+    #skip# getting PLATEAU
     top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
         assert_equal "OURAY R-1", top_performer.first
-        assert_in_delta 0.153, top_performer.last, 0.005
+        assert_equal 0.153, top_performer.last
   end
 
   def test_top_overall_subjects
-    skip
-    assert_equal "SANGRE DE CRISTO RE-22J", ha.top_statewide_test_year_over_year_growth(grade: 3).first
-    assert_in_delta 0.071, ha.top_statewide_test_year_over_year_growth(grade: 3).last, 0.005
+    #skip, getting SPRINGFIELD
+    assert_equal "SANGRE DE CRISTO RE-22J", @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3).first
+    assert_equal 0.071, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3).last
   end
 
 
@@ -104,4 +105,5 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   #add new tests for statewide data
+  #add edge case tests here
 end

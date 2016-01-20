@@ -11,18 +11,8 @@ class EnrollmentRepository
   end
 
   def load_data(hash)
-
-    loader = DataLoader.new
-
-    graduation_hashes, kindergarten_hashes = {}
-    if hash[:enrollment].has_key?(:kindergarten)
-      kindergarten_hashes = loader.load_data(:participation, hash[:enrollment][:kindergarten])
-    end
-
-    if hash[:enrollment].has_key?(:high_school_graduation)
-      graduation_hashes = loader.load_data(:participation, hash[:enrollment][:high_school_graduation])
-    end
-
+    kindergarten_hashes = load_paths(hash, :kindergarten)
+    graduation_hashes = load_paths(hash, :high_school_graduation)
     kindergarten_hashes.each_key do |district_name|
       kindergarten_hash = kindergarten_hashes[district_name]
       graduation_hash = graduation_hashes[district_name]
@@ -33,9 +23,18 @@ class EnrollmentRepository
     end
   end
 
+  def load_paths(hash, symbol)
+    loader = DataLoader.new
+    enrollment_data = {}
+    if hash[:enrollment].has_key?(symbol)
+      enrollment_data = loader.load_data(:participation, hash[:enrollment][symbol])
+    end
+    enrollment_data
+  end
+
 
   def find_by_name(name)
-    enrollment_objects[name.upcase] #name is key
+    enrollment_objects[name.upcase] 
   end
 end
 
@@ -46,7 +45,7 @@ end
 # @enrollment.load_data({:enrollment => {:kindergarten => "../test/fixtures/Kindergartners in full-day program.csv"}})
 # puts @enrollment.enrollment_objects
 # puts @enrollment.find_by_name("academy 20")
-# #
+#
 
 # er = EnrollmentRepository.new
 # er.load_data({:enrollment => {:high_school_graduation => "../data/High school graduation rates.csv"}})

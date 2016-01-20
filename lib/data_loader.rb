@@ -50,15 +50,20 @@ class DataLoader
   def participation_rates(data, row) # return participation_hash
       district_name = row[:location].upcase
       data = initialize_new_key(district_name, data)
-      district_hashes = {}
-        if row[:data] != "N/A"
+      district_hashes = {} #needs to return district even if it contains NA
+        if row[:data] != "N/A" #|| row[:data] != "LNE" || row[:data] != "#VALUE!"#or LNE or #VALUE!
           year = row[:timeframe].to_i
           rate = row[:data].to_f
           data.fetch(district_name)[year] = Truncate.truncate_number(rate)
         end
-      cleaned_hashes = clean_bad_data(data)
+      #data
+      cleaned_hashes = clean_bad_data(data) #if don't have this, then another test fails
       return cleaned_hashes
   end
+
+  # def take_out_bad_data #if data == N/A or LNE or #VALUE!
+  #
+  # end
 
   def clean_bad_data(hashes) #make test that makes sure bad data is out
     cleaned_hashes = {}

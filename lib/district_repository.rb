@@ -13,28 +13,7 @@ class DistrictRepository
     @districts = {}
   end
 
-  def load_data(hash) #search through enrollment hash, create a new district instance for each one
-    #enrollment_repo = EnrollmentRepository.new
-    #enrollment_repo.load_data({:enrollment => hash[:enrollment]})
-
-    # if !hash[:enrollment][:statewide_testing].nil?
-    #   statewide_test_repo = StatewideTestRepository.new
-    #   statewide_test_repo.load_data({:statewide_testing => hash[:statewide_testing]})
-    #
-    #   enrollment_repo.enrollment_objects.each_key do |district_name|
-    #     enrollment_object = enrollment_repo.find_by_name(district_name)
-    #     statewide_test_object = statewide_test_repo.find_by_name(district_name)
-    #     d = District.new({:name => district_name, :enrollment => enrollment_object, :statewide_test => statewide_test_object}) #need to set enrollment to something
-    #     districts[district_name] = d
-    #   end
-    # else
-    #   enrollment_repo.enrollment_objects.each do |district_name, enrollment_object|
-    #     d = District.new({:name => district_name, :enrollment => enrollment_object}) #need to set enrollment to something
-    #     districts[district_name] = d
-    #   end
-    # end
-    #load_enrollment = hash.has_key?(:enrollment)
-    #load_statewide_testing = hash.has_key?(:statewide_testing)
+  def load_data(hash) 
 
     enrollment_repo = EnrollmentRepository.new
     if hash.has_key?(:enrollment)

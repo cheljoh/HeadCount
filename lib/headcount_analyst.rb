@@ -4,6 +4,8 @@ require_relative 'data_errors'
 
 class HeadcountAnalyst
 
+
+#make headcount analyst class for participation and testing
   def initialize(district_repository)
     @district_repository = DistrictRepository.new
     @district_repository.load_data({

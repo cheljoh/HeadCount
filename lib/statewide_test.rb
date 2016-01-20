@@ -90,7 +90,6 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     if valid_ethnicity?(ethnicity) && valid_subject?(subject) && valid_year?(year)
       get_data_by_subject_and_ethnicity_and_year(subject, ethnicity, year)
     else
-      #raise ArgumentError #UnknownDataError
       unknown_data_error
     end
 
