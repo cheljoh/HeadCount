@@ -47,9 +47,10 @@ class DataLoader
     rescue
       rate = "N/A"
     end
-    ethnicity = row[:race_ethnicity].gsub("Hawaiian/", "").gsub(" ", "_").to_sym.downcase
-    ethnicity_hash = initialize_new_key(ethnicity, data.fetch(district_name))
-    ethnicity_hash.fetch(ethnicity)[year] = rate
+    ethnicity = row[:race_ethnicity]
+    eth_fixed = ethnicity.gsub("Hawaiian/", "").gsub(" ", "_").to_sym.downcase
+    ethnicity_hash = initialize_new_key(eth_fixed, data.fetch(district_name))
+    ethnicity_hash.fetch(eth_fixed)[year] = rate
     data[district_name] = ethnicity_hash
     data
   end

@@ -14,16 +14,11 @@ class HeadcountAnalyst
         :high_school_graduation => "./data/High school graduation rates.csv",
       },
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient" +
-                      " or above on the CSAP_TCAP.csv",
-        :eighth_grade => "./data/8th grade students scoring proficient " +
-                         "or above on the CSAP_TCAP.csv",
-        :math => "./data/Average proficiency on the CSAP_TCAP" +
-                 " by race_ethnicity_ Math.csv",
-        :reading => "./data/Average proficiency on the CSAP_TCAP" +
-                    " by race_ethnicity_ Reading.csv",
-        :writing => "./data/Average proficiency on the CSAP_TCAP" +
-                    " by race_ethnicity_ Writing.csv"
+        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
     })
   end
@@ -127,11 +122,13 @@ class HeadcountAnalyst
   end
 
   def correlation_for_single_district(district_name)
-    kindergarten_graduation_variance = kindergarten_participation_against_high_school_graduation(district_name)
+    kindergarten_graduation_variance =
+    kindergarten_participation_against_high_school_graduation(district_name)
     if kindergarten_graduation_variance == "N/A"
       return "N/A"
     else
-      kindergarten_graduation_variance >= 0.6 && kindergarten_graduation_variance <= 1.5
+      kindergarten_graduation_variance >= 0.6 &&
+      kindergarten_graduation_variance <= 1.5
     end
   end
 
@@ -141,13 +138,14 @@ class HeadcountAnalyst
       testing_hash = get_third_or_eighth_grade_data(district_object, grade)
       subject_only = testing_hash.map{|key, value| [key, value[subject]]}.to_h
       filtered = subject_only.reject {|_key, value| value == "N/A"}
-      min_year, max_year = filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
-      min_results, max_results = filtered[min_year], filtered[max_year]
-
-      if ![max_results, min_results, max_year, min_year].include?("N/A") &&
-         ![max_results, min_results, max_year, min_year].include?(nil) &&
+      min_year = filtered.keys.min_by {|year| year}
+      max_year = filtered.keys.max_by {|year| year}
+      min_num, max_num = filtered[min_year], filtered[max_year]
+      if ![max_num, min_num, max_year, min_year].include?("N/A") &&
+         ![max_num, min_num, max_year, min_year].include?(nil) &&
          min_year != max_year
-        total_growth = Truncate.truncate_number((max_results - min_results)/(max_year - min_year))
+        total_growth =
+        Truncate.truncate_number((max_num - min_num)/(max_year - min_year))
       else
         total_growth = "N/A"
       end
@@ -168,15 +166,19 @@ class HeadcountAnalyst
     growth_by_district = {}
     @district_repository.districts.each do |district_name, district_object|
       testing_hash = get_third_or_eighth_grade_data(district_object, grade)
-      filtered = testing_hash.reject {|_key, inner_hash| #reject if 2 or more subjects are N/A
-        inner_hash.values.inject(0){|counter, value| counter + (value == "N/A" ? 1 : 0)} >= 2}
-      min_year, max_year = filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
+      filtered = testing_hash.reject {|_key, inner_hash|
+      inner_hash.values.inject(0){|counter, value| counter +
+        (value == "N/A" ? 1 : 0)} >= 2}
+      min_year, max_year =
+      filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
       if filtered.nil? || filtered.count == 0 || (min_year == max_year)
         average = "N/A"
       else
-        average = growth_percentage_average(filtered, min_year, max_year, weights)
+        average =
+        growth_percentage_average(filtered, min_year, max_year, weights)
       end
-      growth_by_district[district_name] =  average != "N/A" ? Truncate.truncate_number(average) : "N/A"
+      growth_by_district[district_name] =
+      average != "N/A" ? Truncate.truncate_number(average) : "N/A"
     end
     growth_by_district
   end
@@ -233,12 +235,14 @@ class HeadcountAnalyst
       grade_errors(grade)
     end
     if subject.nil? && n_districts.nil? #for only grade
-      growth_by_district_all_subjects = growth_percentages_for_all_districts_in_all_subjects(grade, weights)
-      name_and_growth = find_max_number(growth_by_district_all_subjects) #.max_by {|key, number| number}
+      growth_by_district_all_subjects =
+      growth_percentages_for_all_districts_in_all_subjects(grade, weights)
+      name_and_growth = find_max_number(growth_by_district_all_subjects)
     else
-      growth_by_district = growth_percentages_for_all_districts_by_subject(grade, subject)
+      growth_by_district =
+      growth_percentages_for_all_districts_by_subject(grade, subject)
       if hash[:top].nil? #for only grade and subject
-        name_and_growth = find_max_number(growth_by_district) #.max_by {|key, number| number}
+        name_and_growth = find_max_number(growth_by_district)
       else #for top, grade, and subjects
         name_and_growth = find_top_n_districts(growth_by_district, n_districts)
       end
@@ -267,35 +271,3 @@ class HeadcountAnalyst
   end
 
 end
-
-
-dr = DistrictRepository.new
-headcount_analyst = HeadcountAnalyst.new(dr)
-headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing)
-
-
-#
-# headcount_analyst.top_statewide_test_year_over_year_growth(subject: :math)
-#puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :writing)
-#puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-#puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8)
-#puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.33, :reading => 0.33, :writing => 0.33})
-
-
-
-# puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
-#=> [['top district name', growth_1], ['second district name', growth_2], ['third district name', growth_3]]
-
-
-
-# puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(for: 'academy 20')
-# puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:for => 'STATEWIDE')
-# puts headcount_analyst.kindergarten_participation_correlates_with_high_school_graduation(:across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
-
-
-
- #=> {2009 => 0.766, 2010 => 0.566, 2011 => 0.46 }
-# dr = DistrictRepository.new
-# @headcount_analyst = HeadcountAnalyst.new(dr)
-# rate = @headcount_analyst.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
-# puts rate
