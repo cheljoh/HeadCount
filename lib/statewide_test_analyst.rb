@@ -41,15 +41,12 @@ class StatewideTestAnalyst
     @district_repository.districts.each do |district_name, district_object|
       testing_hash = get_third_or_eighth_grade_data(district_object, grade)
       filtered = testing_hash.reject {|_key, inner_hash|
-      inner_hash.values.inject(0){|counter, value| counter +
-        (value == "N/A" ? 1 : 0)} >= 2}
-      min_year, max_year =
-      filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
+      inner_hash.values.inject(0){|counter, value| counter + (value == "N/A" ? 1 : 0)} >= 2}
+      min_year, max_year = filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
       if filtered.nil? || filtered.count == 0 || (min_year == max_year)
         average = "N/A"
       else
-        average =
-        growth_percentage_average(filtered, min_year, max_year, weights)
+        average = growth_percentage_average(filtered, min_year, max_year, weights)
       end
       growth_by_district[district_name] =
       average != "N/A" ? Truncate.truncate_number(average) : "N/A"
@@ -109,12 +106,10 @@ class StatewideTestAnalyst
       grade_errors(grade)
     end
     if subject.nil? && n_districts.nil? #for only grade
-      growth_by_district_all_subjects =
-      growth_percentages_for_all_districts_in_all_subjects(grade, weights)
+      growth_by_district_all_subjects = growth_percentages_for_all_districts_in_all_subjects(grade, weights)
       name_and_growth = find_max_number(growth_by_district_all_subjects)
     else
-      growth_by_district =
-      growth_percentages_for_all_districts_by_subject(grade, subject)
+      growth_by_district = growth_percentages_for_all_districts_by_subject(grade, subject)
       if hash[:top].nil? #for only grade and subject
         name_and_growth = find_max_number(growth_by_district)
       else #for top, grade, and subjects
@@ -125,7 +120,7 @@ class StatewideTestAnalyst
   end
 
   def filter_hash(hash)
-    filtered = hash.reject{|_key, value| value == "N/A"}
+    hash.reject{|_key, value| value == "N/A"}
   end
 
   def find_top_n_districts(growth_by_district, n_districts)

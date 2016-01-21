@@ -122,4 +122,5 @@ class EnrollmentRepositoryTest < Minitest::Test
     enrollment = @enrollment.find_by_name("WEST YUMA COUNTY RJ-1")
     assert_equal "N/A", enrollment.graduation_rate_in_year(2010)
   end
+  
 end

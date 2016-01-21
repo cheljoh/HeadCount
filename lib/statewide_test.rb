@@ -26,9 +26,7 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
   def proficient_by_race_or_ethnicity(ethnicity)
     year_hash, data_by_subject = {}
     if valid_ethnicity?(ethnicity)
-      reading_scores = reading[ethnicity]
-      writing_scores = writing[ethnicity]
-      math_scores = math[ethnicity]
+      reading_scores, writing_scores, math_scores = reading[ethnicity], writing[ethnicity], math[ethnicity]
       math_scores.each_key do |key|
         data_by_subject =
         {:reading => reading_scores[key],

@@ -3,20 +3,22 @@ require './lib/enrollment'
 require_relative 'test_helper'
 
 class DistrictRepositoryTest < Minitest::Test
-  # class TestEconomicProfile < Minitest::Test
-  #   def test_free_or_reduced_lunch_in_year
-  #     path       = File.expand_path("../data", __dir__)
-  #     repository = DistrictRepository.from_csv(path)
-  #     district   = repository.find_by_name("ACADEMY 20")
-  #
-  #     assert_equal 0.125, district.economic_profile.free_or_reduced_lunch_in_year(2012)
-  #   end
-  # end
 
   def setup
     @district = DistrictRepository.new
-    @district.load_data({:enrollment => {:kindergarten => "./test/fixtures/Kindergartners in full-day program.csv"}})
-    #could make this a class variable @@ and use all files
+    @district.load_data({
+      :enrollment => {
+        :kindergarten => "./test/fixtures/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./test/fixtures/High school graduation rates.csv",
+      },
+      :statewide_testing => {
+        :third_grade => "./test/fixtures/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :eighth_grade => "./test/fixtures/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./test/fixtures/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :reading => "./test/fixtures/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        :writing => "./test/fixtures/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+      }
+    })
   end
 
   def test_a_method
@@ -43,17 +45,11 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 2, district_objects.count
   end
 
-  def test_loading_and_finding_districts #fails because of west yuma
+  def test_loading_and_finding_districts 
     dr = DistrictRepository.new
-    dr.load_data({
-                   :enrollment => {
-                     :kindergarten => "./data/Kindergartners in full-day program.csv"
-                   }
-                 })
+    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
     district = dr.find_by_name("ACADEMY 20")
-
     assert_equal "ACADEMY 20", district.name
-
     assert_equal 7, dr.find_all_matching("WE").count
   end
 

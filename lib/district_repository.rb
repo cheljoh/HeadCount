@@ -1,4 +1,3 @@
-require 'csv'
 require_relative 'enrollment_repository'
 require_relative 'enrollment'
 require_relative 'district'
@@ -14,18 +13,10 @@ class DistrictRepository
   end
 
   def load_data(hash)
-
     enrollment_repo = EnrollmentRepository.new
-    if hash.has_key?(:enrollment)
-      enrollment_repo.load_data({:enrollment => hash[:enrollment]})
-    end
-
+    try_load(hash, :enrollment, enrollment_repo)
     statewide_test_repo = StatewideTestRepository.new
-    if hash.has_key?(:statewide_testing)
-      statewide_test_repo.load_data(
-        {:statewide_testing => hash[:statewide_testing]})
-    end
-
+    try_load(hash, :statewide_testing, statewide_test_repo)
     enrollment_repo.enrollment_objects.each_key do |district_name|
       enrollment_object = enrollment_repo.find_by_name(district_name)
       statewide_test_object = statewide_test_repo.find_by_name(district_name)
@@ -34,6 +25,12 @@ class DistrictRepository
         :enrollment => enrollment_object,
         :statewide_test => statewide_test_object})
       districts[district_name] = d
+    end
+  end
+
+  def try_load(hash, key, object)
+    if hash.has_key?(key)
+      object.load_data({key => hash[key]})
     end
   end
 

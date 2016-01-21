@@ -2,7 +2,6 @@ require_relative 'truncate'
 
 class DataLoader
 
-
   def load_data(category, path)
     data = {}
     contents = CSV.open path, headers: true, header_converters: :symbol
