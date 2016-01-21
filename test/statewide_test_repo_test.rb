@@ -88,4 +88,24 @@ class StatewideTestRepositoryTest < Minitest::Test
     assert_equal expected, statewide_test.writing
   end
 
+  def test_proficient_for_subject_by_grade_in_year_for_nonexisting_data_of_statewide_test_object
+    testing = @str.find_by_name("PLATEAU VALLEY 50")
+    assert_equal "N/A", testing.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
+  end
+
+  def test_proficient_for_subject_by_race_in_year_for_na_data_of_statewide_test_object
+    testing = @str.find_by_name("ADAMS COUNTY 14")
+    assert_equal "N/A", testing.proficient_for_subject_by_race_in_year(:math, :asian, 2011)
+  end
+
+  def test_proficient_by_race_or_ethnicity_for_na_data
+    testing = @str.find_by_name("AGUILAR REORGANIZED 6")
+    expected =
+    {2011=>{:reading=>"N/A", :writing=>"N/A", :math=>"N/A"},
+    2012=>{:reading=>"N/A", :writing=>"N/A", :math=>"N/A"},
+    2013=>{:reading=>"N/A", :writing=>"N/A", :math=>"N/A"},
+    2014=>{:reading=>"N/A", :writing=>"N/A", :math=>"N/A"}}
+    assert_equal expected, testing.proficient_by_race_or_ethnicity(:black)
+  end
+
 end

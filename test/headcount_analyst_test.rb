@@ -59,63 +59,66 @@ class HeadcountAnalystTest < Minitest::Test
     assert district_correlation
   end
 
-  def test_top_statewide_test_year_over_year_by_subject_and_grade
+  def test_top_statewide_test_year_over_year_for_eighth_grade_writing
+    skip #i wrote this test, aspen prolly not right anymore
     assert_equal ["ASPEN 1", 0.125], @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :writing)
   end
 
   def test_top_statewide_test_year_over_year_by_subject_and_grade_three_leaders
+    #float/string comparison
     expected = [["CENTENNIAL R-1", 0.088], ["WESTMINSTER 50", 0.099], ["SPRINGFIELD RE-4", 0.149]]
     assert_equal expected, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
   end
 
-  def test_top_statewide_test_year_over_year_for_all_subjects
-    expected = ["SPRINGFIELD RE-4", 0.132]
-    assert_equal expected, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3)
-  end
-
-  def test_top_statewide_test_year_over_year_for_all_subjects_weighted_subjects
-    expected = ["PLATEAU RE-5", 0.101]
-    assert_equal expected, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-  end
-
-  def test_weighted_subjects
+  def test_top_statewide_test_year_over_year_weighted_subjects
     #skip# getting PLATEAU
     top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-        assert_equal "OURAY R-1", top_performer.first
-        assert_equal 0.153, top_performer.last
+    assert_equal ["OURAY R-1", 0.153], top_performer
   end
 
-  def test_top_overall_subjects
+  def test_top_statewide_test_year_over_year_growth_all_subjects_eighth_grade
+    top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8)
+    assert_equal ["OURAY R-1", 0.11], top_performer
+  end
+
+  def test_statewide_test_year_over_year_growth_eighth_grade_reading
+    top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :reading)
+    assert_equal ["COTOPAXI RE-3", 0.13], top_performer
+  end
+
+  def test_statewide_year_over_year_growth_third_grade_writing
+    top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, subject: :writing)
+    assert_equal ["BETHUNE R-5", 0.148], top_performer
+  end
+
+  def test_top_overall_subjects_grade_three
     #skip, getting SPRINGFIELD
-    assert_equal "SANGRE DE CRISTO RE-22J", @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3).first
-    assert_equal 0.071, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3).last
+    top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3)
+    assert_equal ["SANGRE DE CRISTO RE-22J", 0.071], top_performer
   end
 
-  def test
-    skip
-    testing = str.find_by_name("PLATEAU VALLEY 50")
-    assert_equal "N/A", testing.proficient_for_subject_by_grade_in_year(:reading, 8, 2011)
+  def test_statewide_test_year_over_year_growth_for_third_grade_math
+    top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+    assert_equal ["WILEY RE-13 JT", 0.3], top_performer
   end
-
-  def test
-    skip
-    assert_equal "WILEY RE-13 JT", ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).first
-    assert_in_delta 0.3, ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math).last, 0.005
-  end
-
 
   def test_top_statewide_test_year_over_year_for_all_subjects_weighted_averages_do_not_add_up_to_one
-    skip
+    assert_raises UnknownDataError do
+      @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.5})
+    end
   end
 
-  def test_insufficient_information_error
-    skip
+  def test_insufficient_information_error_for_grade
+    assert_raises InsufficientInformationError do
+      @headcount_analyst.top_statewide_test_year_over_year_growth(subject: :math)
+    end
   end
 
-  def test_unknown_data_error
-    skip
+  def test_unknown_data_error_for_grade
+    assert_raises UnknownDataError do
+      @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 9, subject: :math)
+    end
   end
 
   #add new tests for statewide data
-  #add edge case tests here- N/A
 end

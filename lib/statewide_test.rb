@@ -19,7 +19,6 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     elsif grade == 8
       eighth_grade
     else
-      #raise ArgumentError #should be unknown data error, make own class?
       unknown_data_error
     end
   end
@@ -34,7 +33,6 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
       end
       year_hash
     else
-      #raise ArgumentError #UnknownRaceError
       unknown_race_error
     end
   end
@@ -63,7 +61,6 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     if valid_subject?(subject) && valid_grade?(grade) && valid_year?(year)
       get_data_by_grade_and_year_and_subject(subject, grade, year)
     else
-      #raise ArgumentError #UnknownDataError
       unknown_data_error
     end
   end

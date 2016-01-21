@@ -154,11 +154,11 @@ class HeadcountAnalyst
     end
   end
 
-  def growth_percentages_for_all_districts_in_all_subjects(grade, weights=nil)
+  def growth_percentages_for_all_districts_in_all_subjects(grade, weights = nil)
     growth_by_district = {}
     @district_repository.districts.each do |district_name, district_object|
       testing_hash = get_third_or_eighth_grade_data(district_object, grade)
-      filtered = testing_hash.reject {|key, inner_hash| inner_hash.values.all?{|value| value == "N/A"}}
+      filtered = testing_hash.reject {|_key, inner_hash| inner_hash.values.all?{|value| value == "N/A"}}
       min_year, max_year = filtered.keys.min_by {|year| year}, filtered.keys.max_by {|year| year}
       if filtered.nil? || filtered.count == 0 || (min_year == max_year)
         average = "N/A"
@@ -179,7 +179,6 @@ class HeadcountAnalyst
           growths[subject] = (upper_rate - lower_rate)/(max_year - min_year)
         end
     end
-
     if weights.nil?
        average = compute_average(growths.values)
     else
@@ -190,14 +189,19 @@ class HeadcountAnalyst
 
   def compute_weighted_average(values, weights)
     if weights.inject(0){|sum, number| sum + number} != 1.0
-      raise UnknownDataError
+      incorrect_data_for_weights
+      #fail UnknownDataError
     end
-
     average = 0
     values.each_index do |index|
-      average += values[index]*weights[index]
+      average += values[index] * weights[index]
     end
     average
+  end
+
+  def incorrect_data_for_weights
+    fail UnknownDataError,
+    "Grade weights must add up to zero"
   end
 
   def add_values(values)
@@ -215,9 +219,16 @@ class HeadcountAnalyst
     subject = hash[:subject]
     n_districts = hash[:top]
     weights = hash[:weighting]
-    if !valid_grades.include?(grade)
-      insufficient_information_error(grade)
+    if !hash.keys.include?(:grade) || !valid_grades.include?(grade)
+      # require 'pry'
+      # binding.pry
+      grade_errors(grade)
     end
+    # if !valid_grades.include?(grade)
+    #   require 'pry'
+    #   binding.pry
+    #   grade_errors(grade)
+    # end
     if subject.nil? && n_districts.nil? #for only grade
       growth_by_district_all_subjects = growth_percentages_for_all_districts_in_all_subjects(grade, weights)
       name_and_growth = find_max_number(growth_by_district_all_subjects) #.max_by {|key, number| number}
@@ -237,13 +248,13 @@ class HeadcountAnalyst
     sorted.last(n_districts)
   end
 
-  def insufficient_information_error(grade)
+  def grade_errors(grade)
     if grade.nil?
-      fail InsufficientInformationError
-      "#{InsufficientInformationError}: A grade must be provided to answer this question"
+      fail InsufficientInformationError,
+      "A grade must be provided to answer this question"
     else
-      fail UnknownDataError #this is apparentely unreachable
-      "#{UnknownDataError}: #{grade} is not a known grade"
+      fail UnknownDataError, #this is apparentely unreachable
+      "#{grade} is not a known grade"
     end
   end
 
@@ -251,9 +262,10 @@ end
 
 
 
-
-#dr = DistrictRepository.new
-#headcount_analyst = HeadcountAnalyst.new(dr)
+# 
+# dr = DistrictRepository.new
+# headcount_analyst = HeadcountAnalyst.new(dr)
+# headcount_analyst.top_statewide_test_year_over_year_growth(subject: :math)
 #puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :writing)
 #puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
 #puts headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8)

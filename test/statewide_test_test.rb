@@ -199,19 +199,19 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_invalid_subject_for_proficient_for_subject_by_race_in_year
-    assert_raises UnknownDataError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do
       @statewide_test.proficient_for_subject_by_race_in_year(:hello, :black, 2012)
     end
   end
 
   def test_invalid_ethnicity_for_proficient_for_subject_by_race_in_year
-    assert_raises UnknownDataError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do
       @statewide_test.proficient_for_subject_by_race_in_year(:reading, :fish, 2012)
     end
   end
 
   def test_invalid_year_for_proficient_for_subject_by_race_in_year
-    assert_raises UnknownDataError do #needs to be UnknownDataError?
+    assert_raises UnknownDataError do 
       @statewide_test.proficient_for_subject_by_race_in_year(:reading, :white, 2000)
     end
   end
