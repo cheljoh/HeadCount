@@ -60,18 +60,16 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_for_eighth_grade_writing
-    skip #i wrote this test, aspen prolly not right anymore
-    assert_equal ["ASPEN 1", 0.125], @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :writing)
+    assert_equal ["DE BEQUE 49JT", 0.17], @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, subject: :writing)
   end
 
   def test_top_statewide_test_year_over_year_by_subject_and_grade_three_leaders
-    #float/string comparison
-    expected = [["CENTENNIAL R-1", 0.088], ["WESTMINSTER 50", 0.099], ["SPRINGFIELD RE-4", 0.149]]
+    expected =
+    [["COTOPAXI RE-3", 0.07], ["SANGRE DE CRISTO RE-22J", 0.071], ["WILEY RE-13 JT", 0.3]]
     assert_equal expected, @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
   end
 
   def test_top_statewide_test_year_over_year_weighted_subjects
-    #skip# getting PLATEAU
     top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
     assert_equal ["OURAY R-1", 0.153], top_performer
   end
@@ -92,7 +90,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_overall_subjects_grade_three
-    #skip, getting SPRINGFIELD
     top_performer = @headcount_analyst.top_statewide_test_year_over_year_growth(grade: 3)
     assert_equal ["SANGRE DE CRISTO RE-22J", 0.071], top_performer
   end

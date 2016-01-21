@@ -25,7 +25,6 @@ class DataLoader
   def testing_by_grade_row(data, row) #need to have something for N/A
     district_name = row[:location].upcase
     data = initialize_new_key(district_name, data)
-
     year = row[:timeframe].to_i
     begin
       rate = Truncate.truncate_number(Float(row[:data]))
@@ -42,7 +41,6 @@ class DataLoader
   def subject_proficiency_by_ethnicity_row(data, row)
     district_name = row[:location].upcase
     data = initialize_new_key(district_name, data)
-
     year = row[:timeframe].to_i
     begin
       rate = Truncate.truncate_number(Float(row[:data]))
@@ -59,19 +57,6 @@ class DataLoader
   def participation_rates(data, row) # return participation_hash
       district_name = row[:location].upcase
       data = initialize_new_key(district_name, data)
-      #district_hashes = {} #needs to return district even if it contains NA
-      #if row[:data] != "N/A" #|| row[:data] != "LNE" || row[:data] != "#VALUE!"#or LNE or #VALUE!
-      #  year = row[:timeframe].to_i
-
-      #  begin
-      #    rate = Float(row[:data])
-      #    data.fetch(district_name)[year] = Truncate.truncate_number(rate)
-      #
-      #  end
-      #end
-      #data
-      #cleaned_hashes = clean_bad_data(data) #if don't have this, then another test fails
-      #return cleaned_hashes
       year = row[:timeframe].to_i
       begin
         rate = Truncate.truncate_number(Float(row[:data]))
@@ -81,22 +66,6 @@ class DataLoader
       data.fetch(district_name)[year] = rate
       return data
   end
-
-  # def take_out_bad_data #if data == N/A or LNE or #VALUE!
-  #
-  # end
-
-  # def clean_bad_data(hashes) #make test that makes sure bad data is out
-  #   cleaned_hashes = {}
-  #
-  #   hashes.each do |key, value| #only get districs that have good values
-  #     if value.count != 0
-  #       cleaned_hashes[key] = value #need to have west yuma in though
-  #     end
-  #   end
-  #
-  #   cleaned_hashes
-  # end
 
   def initialize_new_key(key, data)
     if !data.has_key?(key)

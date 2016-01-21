@@ -13,7 +13,7 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     @writing = hash[:writing]
   end
 
-  def proficient_by_grade(grade) #unkown data error with unknown grade. Method returns a hash grouped by year that points to subjects
+  def proficient_by_grade(grade)
     if grade == 3
       third_grade
     elsif grade == 8
@@ -23,12 +23,17 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
     end
   end
 
-  def proficient_by_race_or_ethnicity(ethnicity) #right now, race is string
+  def proficient_by_race_or_ethnicity(ethnicity)
     year_hash, data_by_subject = {}
     if valid_ethnicity?(ethnicity)
-      reading_scores, writing_scores, math_scores = reading[ethnicity], writing[ethnicity], math[ethnicity]
+      reading_scores = reading[ethnicity]
+      writing_scores = writing[ethnicity]
+      math_scores = math[ethnicity]
       math_scores.each_key do |key|
-        data_by_subject = {:reading => reading_scores[key], :writing => writing_scores[key], :math => math_scores[key]}
+        data_by_subject =
+        {:reading => reading_scores[key],
+          :writing => writing_scores[key],
+          :math => math_scores[key]}
         year_hash[key] = data_by_subject
       end
       year_hash
@@ -38,7 +43,8 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
   end
 
   def valid_ethnicity?(ethnicity)
-    valid_ethnicities = [:asian, :black, :pacific_islander, :hispanic, :native_american, :two_or_more, :white]
+    valid_ethnicities = [:asian, :black, :pacific_islander, :hispanic,
+       :native_american, :two_or_more, :white]
     valid_ethnicities.include?(ethnicity)
   end
 
@@ -66,11 +72,7 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
   end
 
   def get_data_by_grade_and_year_and_subject(subject, grade, year)
-    if grade == 3
-      third_grade[year][subject]
-    elsif grade == 8
-      eighth_grade[year][subject]
-    end
+    grade == 3 ? third_grade[year][subject] : eighth_grade[year][subject]
   end
 
   def get_data_by_subject_and_ethnicity_and_year(subject, ethnicity, year)
@@ -84,7 +86,8 @@ attr_accessor :name, :third_grade, :eighth_grade, :math, :reading, :writing
   end
 
   def proficient_for_subject_by_race_in_year(subject, ethnicity, year)
-    if valid_ethnicity?(ethnicity) && valid_subject?(subject) && valid_year?(year)
+    if valid_ethnicity?(ethnicity) && valid_subject?(subject) &&
+       valid_year?(year)
       get_data_by_subject_and_ethnicity_and_year(subject, ethnicity, year)
     else
       unknown_data_error
